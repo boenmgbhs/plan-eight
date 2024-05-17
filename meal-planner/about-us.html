@@ -5,6 +5,8 @@
         <title>PLAN EIGHT: Meal Planner and Expense Tracker - ABOUT US</title>
         <link rel="stylesheet" href="about-us.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     </head>
     <body>
         <section class="section-1">
@@ -212,14 +214,14 @@
                 </div>
             </div>
         </section>
+
         <section class="form">
             <img class="background-image" src="images/form-bg.png">
             <div class="contact-box">
-                <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+                <form id="contact-form">
                     <h1>Contact us</h1>
                     <p>If you have any concerns, just leave a message!</p>
-                    <input type="hidden" name="access_key" value="fe2eabf1-f373-46c6-98cc-9df160b282e6">
-
+    
                     <div class="input-container">
                         <input type="text" name="name" class="input-field" placeholder="Name" required>
                     </div>
@@ -227,13 +229,54 @@
                         <input type="email" name="email" class="input-field" placeholder="Email" required>
                     </div>
                     <textarea name="message" class="input-field textarea-field" placeholder="Message" required></textarea>
-                    <input type="hidden" name="redirect" value="https://web3forms.com/success">
                     <button type="submit" class="btn">
                         Send Message <i class="fa-regular fa-paper-plane"></i>
                     </button>
                 </form>
             </div>
         </section>
+    
+        <script>
+            // Your Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyB_A2vo2J2WRc2sm0NTQuuUnIjNwM8PjAk",
+                authDomain: "planeightmobiappdb.firebaseapp.com",
+                databaseURL: "https://planeightmobiappdb-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "planeightmobiappdb",
+                storageBucket: "planeightmobiappdb.appspot.com",
+                messagingSenderId: "716414117992",
+                appId: "1:716414117992:web:157f745ef51ed8b090b3dd"
+            };
+    
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+    
+            // Reference to your database
+            var database = firebase.database();
+    
+            // Form submission handler
+            document.getElementById('contact-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+    
+                var name = event.target.name.value;
+                var email = event.target.email.value;
+                var message = event.target.message.value;
+    
+                // Save message to Firebase
+                database.ref('messages').push({
+                    name: name,
+                    email: email,
+                    message: message,
+                    timestamp: Date.now()
+                }).then(() => {
+                    alert('Message sent successfully!');
+                    // Clear form
+                    event.target.reset();
+                }).catch((error) => {
+                    console.error('Error writing new message to Firebase Database', error);
+                });
+            });
+        </script>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
